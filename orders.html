@@ -1,0 +1,232 @@
+<html>
+    <head>
+        <title>Мои заказы - Кофейня "Керосинка"</title>
+        <link rel="stylesheet" type="text/css" href="style.css">
+        <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+        <style>
+            .orders-container {
+                background: #fff;
+                padding: 30px;
+                border-radius: 15px;
+                box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+                margin: 20px 0;
+            }
+            .order-card {
+                border: 1px solid #e8d5c4;
+                border-radius: 12px;
+                padding: 20px;
+                margin-bottom: 20px;
+            }
+            .order-card-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                border-bottom: 1px solid #f0e0d0;
+                padding-bottom: 10px;
+                margin-bottom: 10px;
+                flex-wrap: wrap;
+            }
+            .order-card-header .order-date {
+                color: #888;
+                font-size: 14px;
+            }
+            .order-card-header .order-total {
+                font-weight: bold;
+                color: #c49a6c;
+                font-size: 20px;
+            }
+            .order-item {
+                display: flex;
+                justify-content: space-between;
+                padding: 5px 0;
+                border-bottom: 1px solid #f5f0eb;
+                font-size: 14px;
+            }
+            .order-item:last-child {
+                border-bottom: none;
+            }
+            .order-empty {
+                text-align: center;
+                padding: 40px 0;
+                color: #888;
+                font-size: 18px;
+            }
+            .order-empty a {
+                color: #c49a6c;
+                font-weight: bold;
+                text-decoration: none;
+            }
+            .order-empty a:hover {
+                text-decoration: underline;
+            }
+            .orders-actions {
+                display: flex;
+                gap: 15px;
+                flex-wrap: wrap;
+                margin-top: 15px;
+                justify-content: center;
+            }
+            .orders-actions .btn {
+                padding: 12px 30px;
+                border: none;
+                border-radius: 30px;
+                font-weight: bold;
+                font-size: 16px;
+                cursor: pointer;
+                transition: 0.3s;
+                text-decoration: none;
+                display: inline-block;
+                background: #2c1810;
+                color: #f5e6d3;
+            }
+            .orders-actions .btn:hover {
+                background: #c49a6c;
+                color: #2c1810;
+            }
+            .btn-danger-order {
+                background: #e74c3c !important;
+                color: #fff !important;
+            }
+            .btn-danger-order:hover {
+                background: #c0392b !important;
+            }
+            .sort-buttons {
+                display: flex;
+                gap: 10px;
+                margin-bottom: 20px;
+                flex-wrap: wrap;
+            }
+            .sort-buttons button {
+                padding: 8px 20px;
+                border: 2px solid #e8d5c4;
+                border-radius: 20px;
+                background: #fff;
+                cursor: pointer;
+                transition: 0.3s;
+                font-weight: bold;
+            }
+            .sort-buttons button:hover {
+                background: #2c1810;
+                color: #f5e6d3;
+                border-color: #2c1810;
+            }
+            .sort-buttons button.active {
+                background: #2c1810;
+                color: #f5e6d3;
+                border-color: #2c1810;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="header1">
+            <a href="index.html">
+                <img src="logo_coffee.jpg" width="150" border="3" align="left">
+            </a>
+            <h1 align="center">Кофейня "Керосинка"</h1>
+            <div class="feedback-top-link">
+                <a href="feedback.php" class="feedback-link">📩 Обратная связь</a>
+                <a href="cart.html" class="feedback-link" style="margin-left:10px;background:#2c1810;">🛒 Корзина <span id="cart-count" style="display:none;background:#e74c3c;padding:2px 8px;border-radius:50%;">0</span></a>
+            </div>
+        </div>
+        <section>
+            <nav>
+                <li><a href="index.html">Главная</a></li>
+                <li><a href="coffee.html">Кофе</a></li>
+                <li><a href="sandwiches.html">Сэндвичи</a></li>
+                <li><a href="lemonade.html">Лимонады</a></li>
+                <li><a href="contacts.html">Контакты</a></li>
+                <li><a href="cart.html">🛒 Корзина</a></li>
+                <li><a href="orders.html">📦 Заказы</a></li>
+            </nav>
+            <div class="orders-container">
+                <h2>📦 Мои заказы</h2>
+                <div class="sort-buttons">
+                    <button class="active" onclick="sortOrders('newest')">🆕 Сначала новые</button>
+                    <button onclick="sortOrders('oldest')">🕐 Сначала старые</button>
+                </div>
+                <div id="orders-list"></div>
+                <div class="orders-actions">
+                    <a href="index.html" class="btn">← В меню</a>
+                    <button class="btn btn-danger-order" onclick="clearOrders()">🗑️ Очистить историю</button>
+                </div>
+            </div>
+        </section>
+        <footer>
+            Наш адрес
+            119991, Москва, Ленинский пр-т., д.65
+        </footer>
+        <script>
+            var currentSort = 'newest';
+
+            function loadOrders() {
+                var container = document.getElementById('orders-list');
+                var orders = JSON.parse(localStorage.getItem('orders') || '[]');
+
+                if (orders.length === 0) {
+                    container.innerHTML = '<div class="order-empty">📦 У вас пока нет заказов<br><a href="index.html">Сделать первый заказ</a></div>';
+                    return;
+                }
+
+                // Сортировка по дате
+                var sortedOrders = sortOrdersByDate(orders, currentSort);
+
+                var html = '';
+                sortedOrders.forEach(function(order, index) {
+                    html += '<div class="order-card"><div class="order-card-header"><div><strong>Заказ #' + (index + 1) + '</strong><span class="order-date"> — ' + order.date + '</span></div><div class="order-total">' + order.total + ' ₽</div></div><div><strong>Имя:</strong> ' + order.customer.name + '</div><div><strong>Телефон:</strong> ' + order.customer.phone + '</div><div><strong>Адрес:</strong> ' + order.customer.address + '</div>' + (order.customer.comment ? '<div><strong>Комментарий:</strong> ' + order.customer.comment + '</div>' : '') + '</div><div style="margin-top:10px;padding-top:10px;border-top:1px solid #f0e0d0;">' + order.items.map(function(item) {
+                        return '<div class="order-item"><span>' + item.name + (item.size ? ' (' + item.size + ')' : '') + ' × ' + item.quantity + '</span><span>' + (item.price * item.quantity) + ' ₽</span></div>';
+                    }).join('') + '</div></div>';
+                });
+                container.innerHTML = html;
+            }
+
+            function sortOrdersByDate(orders, type) {
+                var sorted = [...orders];
+                sorted.sort(function(a, b) {
+                    var dateA = new Date(a.date);
+                    var dateB = new Date(b.date);
+                    if (type === 'newest') {
+                        return dateB - dateA;
+                    } else {
+                        return dateA - dateB;
+                    }
+                });
+                return sorted;
+            }
+
+            function sortOrders(type) {
+                currentSort = type;
+                // Обновляем активную кнопку
+                var buttons = document.querySelectorAll('.sort-buttons button');
+                buttons.forEach(function(btn) {
+                    btn.classList.remove('active');
+                });
+                document.querySelector('.sort-buttons button[onclick="sortOrders(\'' + type + '\')"]').classList.add('active');
+                loadOrders();
+            }
+
+            function clearOrders() {
+                if (confirm('Удалить всю историю заказов?')) {
+                    localStorage.removeItem('orders');
+                    loadOrders();
+                }
+            }
+
+            function updateCartCount() {
+                var cart = JSON.parse(localStorage.getItem('cart') || '[]');
+                var count = cart.reduce(function(sum, item) {
+                    return sum + item.quantity;
+                }, 0);
+                var badge = document.getElementById('cart-count');
+                if (badge) {
+                    badge.textContent = count;
+                    badge.style.display = count > 0 ? 'inline' : 'none';
+                }
+            }
+
+            document.addEventListener('DOMContentLoaded', function() {
+                loadOrders();
+                updateCartCount();
+            });
+        </script>
+    </body>
+</html>

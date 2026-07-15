@@ -1,0 +1,78 @@
+<html>
+    <head>
+        <title>Сэндвичи - Кофейня "Керосинка"</title>
+        <link rel="stylesheet" type="text/css" href="style.css">
+        <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+    </head>
+    <body>
+        <div class="header1">
+            <a href="index.html">
+                <img src="logo_coffee.jpg" width="150" border="3" align="left">
+            </a>
+            <h1 align="center">Кофейня "Керосинка"</h1>
+            <div class="feedback-top-link">
+                <a href="feedback.php" class="feedback-link">📩 Обратная связь</a>
+                <a href="cart.html" class="feedback-link" style="margin-left:10px;background:#2c1810;">🛒 Корзина <span id="cart-count" style="display:none;background:#e74c3c;padding:2px 8px;border-radius:50%;">0</span></a>
+            </div>
+        </div>
+        <section>
+            <nav>
+                <li><a href="index.html">Главная</a></li>
+                <li><a href="coffee.html">Кофе</a></li>
+                <li><a href="sandwiches.html">Сэндвичи</a></li>
+                <li><a href="lemonade.html">Лимонады</a></li>
+                <li><a href="contacts.html">Контакты</a></li>
+                <li><a href="cart.html">🛒 Корзина</a></li>
+            <li><a href="orders.html">📦 Заказы</a></li>
+    </nav>
+            <h2>Наши сэндвичи</h2>
+            <div class="menu-section">
+                <h3>🥪 Сэндвичи и роллы</h3>
+                <div class="menu-item">
+                    <div class="menu-image">
+                        <img src="images/ceasar_roll.jpg" alt="Сэндвич Ролл Цезарь">
+                    </div>
+                    <div class="menu-info">
+                        <span class="menu-name">Сэндвич Ролл "Цезарь"</span>
+                        <span class="menu-price">390 ₽</span>
+                        <div class="menu-desc">Курица, салат айсберг, пармезан, соус цезарь</div>
+                        <div style="margin-top:10px;">
+                            <button onclick="addToCart('Сэндвич Ролл Цезарь', 390, 'images/ceasar_roll.jpg')" class="cart-btn" style="padding:8px 20px; background:#2c1810; color:#f5e6d3; border:none; border-radius:8px; cursor:pointer;">🛒 В корзину</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="menu-item">
+                    <div class="menu-image">
+                        <img src="images/tuna_roll.jpg" alt="Сэндвич Ролл с тунцом">
+                    </div>
+                    <div class="menu-info">
+                        <span class="menu-name">Сэндвич Ролл с тунцом</span>
+                        <span class="menu-price">420 ₽</span>
+                        <div class="menu-desc">Тунец, огурец, салат, соус тартар</div>
+                        <div style="margin-top:10px;">
+                            <button onclick="addToCart('Сэндвич Ролл с тунцом', 420, 'images/tuna_roll.jpg')" class="cart-btn" style="padding:8px 20px; background:#2c1810; color:#f5e6d3; border:none; border-radius:8px; cursor:pointer;">🛒 В корзину</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="menu-item">
+                    <div class="menu-image">
+                        <img src="images/chicken_pita.jpg" alt="Пита с цыплёнком">
+                    </div>
+                    <div class="menu-info">
+                        <span class="menu-name">Пита с цыплёнком</span>
+                        <span class="menu-price">350 ₽</span>
+                        <div class="menu-desc">Цыплёнок, томаты, листья салата, соус чесночный</div>
+                        <div style="margin-top:10px;">
+                            <button onclick="addToCart('Пита с цыплёнком', 350, 'images/chicken_pita.jpg')" class="cart-btn" style="padding:8px 20px; background:#2c1810; color:#f5e6d3; border:none; border-radius:8px; cursor:pointer;">🛒 В корзину</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <footer>
+            Наш адрес
+            119991, Москва, Ленинский пр-т., д.65
+        </footer>
+        <script src="cart.js"></script>
+    </body>
+</html>
