@@ -24,10 +24,17 @@ function updateCartCount() {
     }
 }
 
-// Функция сортировки по алфавиту
 function sortCartByName() {
     cart.sort(function(a, b) {
         return a.name.localeCompare(b.name);
+    });
+    saveCart();
+    renderCart();
+}
+
+function sortCartByDate() {
+    cart.sort(function(a, b) {
+        return b.dateAdded - a.dateAdded;
     });
     saveCart();
     renderCart();
@@ -47,7 +54,8 @@ function addToCart(name, price, image, size) {
             price: price,
             image: image,
             size: size,
-            quantity: 1
+            quantity: 1,
+            dateAdded: Date.now()
         });
     }
     saveCart();
