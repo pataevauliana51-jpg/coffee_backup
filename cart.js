@@ -40,6 +40,14 @@ function sortCartByDate() {
     renderCart();
 }
 
+function sortByPrice() {
+    cart.sort(function(a, b) {
+        return a.price - b.price;
+    });
+    saveCart();
+    renderCart();
+}
+
 function addToCart(name, price, image, size) {
     var key = name + size;
     var existing = cart.find(function(item) {
