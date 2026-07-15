@@ -32,9 +32,9 @@ function sortCartByName() {
     renderCart();
 }
 
-function sortByPrice() {
+function sortCartByDate() {
     cart.sort(function(a, b) {
-        return a.price - b.price;
+        return b.dateAdded - a.dateAdded;
     });
     saveCart();
     renderCart();
@@ -54,7 +54,8 @@ function addToCart(name, price, image, size) {
             price: price,
             image: image,
             size: size,
-            quantity: 1
+            quantity: 1,
+            dateAdded: Date.now()
         });
     }
     saveCart();

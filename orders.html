@@ -3,7 +3,6 @@
         <title>Мои заказы - Кофейня "Керосинка"</title>
         <link rel="stylesheet" type="text/css" href="style.css">
         <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
-        <script src="orders.js" defer></script>
         <style>
             .orders-container {
                 background: #fff;
@@ -91,31 +90,6 @@
             .btn-danger-order:hover {
                 background: #c0392b !important;
             }
-            .sort-buttons {
-                display: flex;
-                gap: 10px;
-                margin-bottom: 20px;
-                flex-wrap: wrap;
-            }
-            .sort-buttons button {
-                padding: 8px 20px;
-                border: 2px solid #e8d5c4;
-                border-radius: 20px;
-                background: #fff;
-                cursor: pointer;
-                transition: 0.3s;
-                font-weight: bold;
-            }
-            .sort-buttons button:hover {
-                background: #2c1810;
-                color: #f5e6d3;
-                border-color: #2c1810;
-            }
-            .sort-buttons button.active {
-                background: #2c1810;
-                color: #f5e6d3;
-                border-color: #2c1810;
-            }
         </style>
     </head>
     <body>
@@ -141,10 +115,6 @@
             </nav>
             <div class="orders-container">
                 <h2>📦 Мои заказы</h2>
-                <div class="sort-buttons">
-                    <button class="active" onclick="sortOrders('newest')">🆕 Сначала новые</button>
-                    <button onclick="sortOrders('oldest')">🕐 Сначала старые</button>
-                </div>
                 <div id="orders-list"></div>
                 <div class="orders-actions">
                     <a href="index.html" class="btn">← В меню</a>
@@ -156,5 +126,47 @@
             Наш адрес
             119991, Москва, Ленинский пр-т., д.65
         </footer>
+        <script>
+            function loadOrders() {
+                var container = document.getElementById('orders-list');
+                var orders = JSON.parse(localStorage.getItem('orders') || '[]');
+                if (orders.length === 0) {
+                    container.innerHTML = '<div class="order-empty">📦 У вас пока нет заказов<br><a href="index.html">Сделать первый заказ</a></div>';
+                    return;
+                }
+                var html = '';
+                var sortedOrders = [...orders].reverse();
+                sortedOrders.forEach(function(order, index) {
+                    html += '<div class="order-card"><div class="order-card-header"><div><strong>Заказ #' + (index + 1) + '</strong><span class="order-date"> — ' + order.date + '</span></div><div class="order-total">' + order.total + ' ₽</div></div><div><strong>Имя:</strong> ' + order.customer.name + '</div><div><strong>Телефон:</strong> ' + order.customer.phone + '</div><div><strong>Адрес:</strong> ' + order.customer.address + '</div>' + (order.customer.comment ? '<div><strong>Комментарий:</strong> ' + order.customer.comment + '</div>' : '') + '</div><div style="margin-top:10px;padding-top:10px;border-top:1px solid #f0e0d0;">' + order.items.map(function(item) {
+                        return '<div class="order-item"><span>' + item.name + (item.size ? ' (' + item.size + ')' : '') + ' × ' + item.quantity + '</span><span>' + (item.price * item.quantity) + ' ₽</span></div>';
+                    }).join('') + '</div></div>';
+                });
+                container.innerHTML = html;
+            }
+
+            function clearOrders() {
+                if (confirm('Удалить всю историю заказов?')) {
+                    localStorage.removeItem('orders');
+                    loadOrders();
+                }
+            }
+
+            function updateCartCount() {
+                var cart = JSON.parse(localStorage.getItem('cart') || '[]');
+                var count = cart.reduce(function(sum, item) {
+                    return sum + item.quantity;
+                }, 0);
+                var badge = document.getElementById('cart-count');
+                if (badge) {
+                    badge.textContent = count;
+                    badge.style.display = count > 0 ? 'inline' : 'none';
+                }
+            }
+
+            document.addEventListener('DOMContentLoaded', function() {
+                loadOrders();
+                updateCartCount();
+            });
+        </script>
     </body>
 </html>
