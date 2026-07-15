@@ -32,14 +32,6 @@ function sortCartByName() {
     renderCart();
 }
 
-function sortCartByDate() {
-    cart.sort(function(a, b) {
-        return b.dateAdded - a.dateAdded;
-    });
-    saveCart();
-    renderCart();
-}
-
 function addToCart(name, price, image, size) {
     var key = name + size;
     var existing = cart.find(function(item) {
@@ -54,8 +46,7 @@ function addToCart(name, price, image, size) {
             price: price,
             image: image,
             size: size,
-            quantity: 1,
-            dateAdded: Date.now()
+            quantity: 1
         });
     }
     saveCart();
